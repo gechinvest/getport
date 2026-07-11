@@ -59,15 +59,65 @@ const Admin = () => {
 
   const handleChange = (path, value) => {
     setFormData(prev => {
-      const newData = { ...prev };
-      const keys = path.split('.');
+      const newData = JSON.parse(JSON.stringify(prev));
+      // Parse path like "projects[0].image" into keys array
+      const keys = path.match(/[^.\[\]]+/g) || [];
       let current = newData;
       for (let i = 0; i < keys.length - 1; i++) {
-        current = current[keys[i]];
+        const key = keys[i];
+        // If key is a number, it's an array index
+        if (!isNaN(key)) {
+          const index = parseInt(key, 10);
+          if (!Array.isArray(current)) {
+            current = [];
+          }
+          if (!current[index]) {
+            current[index] = {};
+          }
+          current = current[index];
+        } else {
+          if (!current[key]) {
+            current[key] = {};
+          }
+          current = current[key];
+        }
       }
       current[keys[keys.length - 1]] = value;
       return newData;
     });
+  };
+
+  const handleImageUpload = async (file, path) => {
+    try {
+      setLoading(true);
+      setMessage('Uploading image...');
+      
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const filePath = `public/${fileName}`;
+
+      // Upload image to Supabase Storage
+      const { error: uploadError } = await supabase
+        .storage
+        .from('portfolio-images')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase
+        .storage
+        .from('portfolio-images')
+        .getPublicUrl(filePath);
+
+      handleChange(path, publicUrl);
+      setMessage('Image uploaded successfully!');
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      setMessage(`Error uploading image: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Skills
@@ -257,14 +307,26 @@ const Admin = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">Profile Image URL</label>
-                    <input
-                      type="text"
-                      value={formData.hero?.profileImage || ''}
-                      onChange={(e) => handleChange('hero.profileImage', e.target.value)}
-                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:border-gray-600"
-                      placeholder="https://example.com/profile.png"
-                    />
+                    <label className="block text-sm font-medium mb-2">Profile Image</label>
+                    <div className="space-y-2">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files[0]) {
+                            handleImageUpload(e.target.files[0], 'hero.profileImage');
+                          }
+                        }}
+                        className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
+                      />
+                      <input
+                        type="text"
+                        value={formData.hero?.profileImage || ''}
+                        onChange={(e) => handleChange('hero.profileImage', e.target.value)}
+                        className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:border-gray-600"
+                        placeholder="Or enter image URL"
+                      />
+                    </div>
                     {formData.hero?.profileImage && (
                       <div className="mt-2">
                         <img
@@ -452,13 +514,26 @@ const Admin = () => {
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium mb-2">Image URL</label>
-                          <input
-                            type="text"
-                            value={project.image}
-                            onChange={(e) => updateProject(index, 'image', e.target.value)}
-                            className="w-full px-4 py-2 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
-                          />
+                          <label className="block text-sm font-medium mb-2">Project Image</label>
+                          <div className="space-y-2">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => {
+                                if (e.target.files && e.target.files[0]) {
+                                  handleImageUpload(e.target.files[0], `projects.${index}.image`);
+                                }
+                              }}
+                              className="w-full px-4 py-2 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
+                            />
+                            <input
+                              type="text"
+                              value={project.image}
+                              onChange={(e) => updateProject(index, 'image', e.target.value)}
+                              className="w-full px-4 py-2 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
+                              placeholder="Or enter image URL"
+                            />
+                          </div>
                         </div>
                       </div>
                       <div className="mt-4 grid md:grid-cols-2 gap-4">
