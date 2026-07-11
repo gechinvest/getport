@@ -2,6 +2,7 @@ import { useInView } from 'react-intersection-observer';
 import { motion, useSpring, useTransform } from 'framer-motion';
 import { useEffect } from 'react';
 import profile from '../assets/profile.png';
+import { usePortfolio } from '../context/PortfolioContext';
 
 const Counter = ({ value, label }) => {
   const [ref, inView] = useInView({ triggerOnce: true });
@@ -21,6 +22,24 @@ const Counter = ({ value, label }) => {
 };
 
 const About = () => {
+  const { portfolioData, loading } = usePortfolio();
+
+  if (loading) {
+    return (
+      <section id="about" className="py-20 bg-white/80 dark:bg-dark-300/80 backdrop-blur-sm">
+        <div className="container mx-auto px-6 text-center">
+          <p className="text-xl text-gray-600 dark:text-gray-300">Loading...</p>
+        </div>
+      </section>
+    );
+  }
+
+  const counters = portfolioData?.about?.counters || [
+    { value: 3, label: "Years Experience" },
+    { value: 20, label: "Projects Completed" },
+    { value: 15, label: "Technologies" }
+  ];
+
   return (
     <section id="about" className="py-20 bg-white/80 dark:bg-dark-300/80 backdrop-blur-sm">
       <div className="container mx-auto px-6">
@@ -41,7 +60,11 @@ const About = () => {
             className="md:w-1/3"
           >
             <div className="glass p-1 rounded-2xl">
-              <img src={profile} alt="Amare" className="rounded-2xl w-full" />
+              <img 
+                src={portfolioData?.hero?.profileImage || profile} 
+                alt={portfolioData?.hero?.name || 'Geta Tenaw'} 
+                className="rounded-2xl w-full" 
+              />
             </div>
           </motion.div>
 
@@ -52,12 +75,12 @@ const About = () => {
             className="md:w-2/3"
           >
             <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed mb-6">
-            I'm a passionate Full-Stack Developer who enjoys building reliable systems and modern web applications. I focus on writing clean, scalable code and creating efficient solutions to real-world problems while continuously learning new technologies.
+              {portfolioData?.about?.description || "I'm a Full Stack Developer and Cybersecurity Researcher with 3+ years of experience. I specialize in React, Node.js, and secure coding practices."}
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 mt-8">
-              <Counter value={1} label="Years Experience" />
-              <Counter value={20} label="Projects Completed" />
-              <Counter value={5} label="Technologies" />
+              {counters.map((counter, index) => (
+                <Counter key={index} value={counter.value} label={counter.label} />
+              ))}
             </div>
           </motion.div>
         </div>

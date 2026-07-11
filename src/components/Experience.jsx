@@ -1,27 +1,21 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import { usePortfolio } from '../context/PortfolioContext';
 
-const experiences = [
+const defaultExperiences = [
   {
-    year: '2025 - Present',
-    title: 'Fullstack Developer (Self-Driven)',
-    company: 'Personal Projects',
-    description: 'Designing and building fullstack web applications using React, Node.js, Express, and MySQL/PostgreSQL. Focused on authentication systems, dashboards, and real-world features like payments and referrals.',
-    icon: '🚀',
-  },
-  {
-    year: '2024 - 2025',
-    title: 'Frontend Developer',
-    company: 'Personal Projects',
-    description: 'Developed responsive and interactive user interfaces using React, Tailwind CSS, and modern JavaScript. Built projects like e-commerce platforms and admin dashboards.',
+    year: '2024 - Present',
+    title: 'Full Stack Developer',
+    company: 'Tech Innovations Inc.',
+    description: 'Developing and maintaining full-stack web applications, implementing security best practices.',
     icon: '💻',
   },
   {
-    year: '2024',
-    title: 'Web Development Learner',
-    company: 'Self-Learning',
-    description: 'Learned core web development fundamentals including HTML, CSS, JavaScript, and backend basics. Built small projects to understand UI/UX, APIs, and database integration.',
-    icon: '📚',
+    year: '2023 - 2024',
+    title: 'Cybersecurity Research Intern',
+    company: 'Security Labs',
+    description: 'Conducted vulnerability assessments and penetration testing for web applications.',
+    icon: '🔐',
   },
 ];
 
@@ -61,6 +55,19 @@ const TimelineItem = ({ experience, index }) => {
 };
 
 const Experience = () => {
+  const { portfolioData, loading } = usePortfolio();
+  const experiences = portfolioData?.experience || defaultExperiences;
+
+  if (loading) {
+    return (
+      <section id="experience" className="py-20 bg-white/10 dark:bg-dark-300/10 backdrop-blur-sm overflow-hidden">
+        <div className="container mx-auto px-6 text-center">
+          <p className="text-xl text-gray-600 dark:text-gray-300">Loading...</p>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="experience" className="py-20 bg-white/10 dark:bg-dark-300/10 backdrop-blur-sm overflow-hidden">
       <div className="container mx-auto px-6">

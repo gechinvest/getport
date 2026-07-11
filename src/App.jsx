@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
 import { ThemeProvider } from './context/ThemeContext';
+import { PortfolioProvider, usePortfolio } from './context/PortfolioContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import LoadingScreen from './components/LoadingScreen';
@@ -15,38 +15,35 @@ import NotFound from './pages/NotFound';
 import About from './components/About';
 import Admin from './pages/Admin';
 
+function AppContent() {
+  const { loading: portfolioLoading } = usePortfolio();
+  return (
+    <>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/socials" element={<Socials />} />
+        <Route path='/skills' element={<Skills />} />
+        <Route path='/about' element={<About />} />
+        <Route path='/projects' element={<Projects />} />
+        <Route path='/experience' element={<Experience />} />
+        <Route path='/contact' element={<Contact />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      <Footer />
+    </>
+  );
+}
+
 function App() {
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 2000);
-  }, []);
-
   return (
     <ThemeProvider>
-      <BrowserRouter>
-        <AnimatePresence mode="wait">
-          {loading ? (
-            <LoadingScreen key="loader" />
-          ) : (
-            <>
-              <Navbar />
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/admin" element={<Admin />} />
-                <Route path="/socials" element={<Socials />} />
-                <Route path='/skills' element={<Skills />} />
-                <Route path='/about' element={<About />} />
-                <Route path='/projects' element={<Projects />} />
-                <Route path='/experience' element={<Experience />} />
-                <Route path='/contact' element={<Contact />} />
-                  <Route path="*" element={<NotFound />} />
-              </Routes>
-              <Footer />
-            </>
-          )}
-        </AnimatePresence>
-      </BrowserRouter>
+      <PortfolioProvider>
+        <BrowserRouter>
+          <AppContent />
+        </BrowserRouter>
+      </PortfolioProvider>
     </ThemeProvider>
   );
 }

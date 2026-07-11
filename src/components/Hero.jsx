@@ -1,14 +1,26 @@
 import { motion } from 'framer-motion';
 import { useTypewriter } from '../hooks/useTypewriter';
 import profile from '../assets/profile.png';
+import { usePortfolio } from '../context/PortfolioContext';
 
 const Hero = () => {
+  const { portfolioData, loading } = usePortfolio();
   const [text] = useTypewriter({
-    words: ['Fullstack Developer', 'Restful API Developer', 'Problem Solver', 'Tech Innovator'],
+    words: portfolioData?.hero?.titles || ['Fullstack Developer', 'Cybersecurity Researcher', 'Tech Innovator'],
     loop: true,
     delay: 70,
     deleteSpeed: 50,
   });
+
+  if (loading) {
+    return (
+      <section id="home" className="py-20 relative min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-xl text-gray-600 dark:text-gray-300">Loading...</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="home" className="py-20 relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -21,20 +33,24 @@ const Hero = () => {
         >
           <motion.div whileHover={{ scale: 1.05 }} className="relative inline-block mb-8">
             <div className="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-purple-500/30 shadow-2xl mx-auto">
-              <img src={profile} alt="Amare" className="w-full h-full object-cover" />
+              <img 
+                src={portfolioData?.hero?.profileImage || profile} 
+                alt={portfolioData?.hero?.name || 'Geta Tenaw'} 
+                className="w-full h-full object-cover" 
+              />
             </div>
             <div className="absolute inset-0 rounded-full border-2 border-purple-500/50 animate-ping"></div>
           </motion.div>
 
           <motion.p className="text-lg text-gray-600 dark:text-gray-300 mb-4">Hello, I'm</motion.p>
           <motion.h1 className="text-5xl md:text-7xl font-bold mb-4">
-            <span className="gradient-text">Geta Tenaw</span>
+            <span className="gradient-text">{portfolioData?.hero?.name || 'Geta Tenaw'}</span>
           </motion.h1>
           <motion.div className="text-2xl md:text-4xl font-semibold text-gray-800 dark:text-white mb-6 h-12">
             <span>{text}</span>
           </motion.div>
           <motion.p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-8">
-            I craft digital experiences that are fast, accessible, and visually appealing.
+            {portfolioData?.hero?.description || 'Passionate about building secure, scalable web applications and exploring the latest in cybersecurity and AI.'}
           </motion.p>
           <motion.div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="#projects" className="px-8 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-full hover:shadow-lg transition-all">
