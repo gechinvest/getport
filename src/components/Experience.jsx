@@ -45,8 +45,7 @@ const TimelineItem = ({ experience, index }) => {
               <span className="text-sm text-purple-500 font-semibold">{experience.year}</span>
             </div>
             <h3 className="text-xl font-bold mb-1 text-gray-800 dark:text-white">{experience.title}</h3>
-            <h4 className="text-gray-600 dark:text-gray-400 mb-3">{experience.company}</h4>
-            <p className="text-gray-700 dark:text-gray-300">{experience.description}</p>
+            <h4 className="text-gray-600 dark:text-gray-400">{experience.company}</h4>
           </div>
         </div>
       </div>
