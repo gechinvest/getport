@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { 
   SiReact, SiNodedotjs, SiExpress, SiMysql, 
-  SiJavascript, SiHtml5, SiCss3, SiTailwindcss,
+  SiJavascript, SiHtml5, SiCss, SiTailwindcss,
   SiGit, SiMongodb, SiTypescript, SiPostgresql
 } from 'react-icons/si';
 import { FaShieldAlt } from 'react-icons/fa';
@@ -14,7 +14,7 @@ const iconMap = {
   SiMysql,
   SiJavascript,
   SiHtml5,
-  SiCss3,
+  SiCss,
   SiTailwindcss,
   SiGit,
   SiMongodb,
@@ -34,7 +34,7 @@ const Skills = () => {
     { name: 'PostgreSQL', icon: 'SiPostgresql', level: 75, color: '#336791' },
     { name: 'JavaScript', icon: 'SiJavascript', level: 95, color: '#F7DF1E' },
     { name: 'HTML5', icon: 'SiHtml5', level: 95, color: '#E34F26' },
-    { name: 'CSS3', icon: 'SiCss3', level: 90, color: '#1572B6' },
+    { name: 'CSS3', icon: 'SiCss', level: 90, color: '#1572B6' },
     { name: 'Tailwind CSS', icon: 'SiTailwindcss', level: 85, color: '#06B6D4' },
     { name: 'Git', icon: 'SiGit', level: 80, color: '#F05032' },
     { name: 'Penetration Testing', icon: 'ShieldCheck', level: 75, color: '#EF4444' }

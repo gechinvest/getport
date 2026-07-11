@@ -67,7 +67,7 @@ const Admin = () => {
   const addSkill = () => {
     setFormData(prev => ({
       ...prev,
-      skills: [...(prev.skills || []), { name: '', icon: 'SiReact', level: 50, color: '#61DAFB' }
+      skills: [...(prev.skills || []), { name: '', icon: 'SiReact', level: 50, color: '#61DAFB' }]
     }));
   };
   const removeSkill = (index) => {
@@ -87,7 +87,7 @@ const Admin = () => {
   const addProject = () => {
     setFormData(prev => ({
       ...prev,
-      projects: [...(prev.projects || []), { id: Date.now(), title: '', description: '', image: '', tags: [], category: 'fullstack', liveUrl: '', githubUrl: '' }
+      projects: [...(prev.projects || []), { id: Date.now(), title: '', description: '', image: '', tags: [], category: 'fullstack', liveUrl: '', githubUrl: '' }]
     }));
   };
   const removeProject = (index) => {
@@ -111,7 +111,7 @@ const Admin = () => {
   const addExperience = () => {
     setFormData(prev => ({
       ...prev,
-      experience: [...(prev.experience || []), { year: '', title: '', company: '', description: '', icon: '💼' }
+      experience: [...(prev.experience || []), { year: '', title: '', company: '', description: '', icon: '💼' }]
     }));
   };
   const removeExperience = (index) => {
@@ -133,7 +133,7 @@ const Admin = () => {
       ...prev,
       contact: {
         ...prev.contact,
-        socialLinks: [...(prev.contact?.socialLinks || []), { name: '', url: '', icon: '🔗' }
+        socialLinks: [...(prev.contact?.socialLinks || []), { name: '', url: '', icon: '🔗' }]
       }
     }));
   };
@@ -304,57 +304,58 @@ const Admin = () => {
                   {(formData.skills || []).map((skill, index) => (
                     <div key={index} className="p-6 bg-gray-50 dark:bg-gray-700 rounded-xl border">
                       <div className="flex justify-between items-start mb-4">
-                      <h3 className="font-semibold text-lg text-gray-900 dark:text-white">Skill {index + 1}</h3>
-                      <button
-                        type="button"
-                        onClick={() => removeSkill(index)}
-                        className="text-red-500 hover:text-red-700 text-2xl"
-                      >
-                        ×
-                      </button>
+                        <h3 className="font-semibold text-lg text-gray-900 dark:text-white">Skill {index + 1}</h3>
+                        <button
+                          type="button"
+                          onClick={() => removeSkill(index)}
+                          className="text-red-500 hover:text-red-700 text-2xl"
+                        >
+                          ×
+                        </button>
+                      </div>
+                      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium mb-2">Name</label>
+                          <input
+                            type="text"
+                            value={skill.name}
+                            onChange={(e) => updateSkill(index, 'name', e.target.value)}
+                            className="w-full px-4 py-2 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium mb-2">Icon</label>
+                          <input
+                            type="text"
+                            value={skill.icon}
+                            onChange={(e) => updateSkill(index, 'icon', e.target.value)}
+                            className="w-full px-4 py-2 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium mb-2">Level ({skill.level}%)</label>
+                          <input
+                            type="range"
+                            min="0"
+                            max="100"
+                            value={skill.level}
+                            onChange={(e) => updateSkill(index, 'level', Number(e.target.value))}
+                            className="w-full"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium mb-2">Color</label>
+                          <input
+                            type="color"
+                            value={skill.color}
+                            onChange={(e) => updateSkill(index, 'color', e.target.value)}
+                            className="w-full h-10 rounded-lg cursor-pointer"
+                          />
+                        </div>
+                      </div>
                     </div>
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium mb-2">Name</label>
-                        <input
-                          type="text"
-                          value={skill.name}
-                          onChange={(e) => updateSkill(index, 'name', e.target.value)}
-                          className="w-full px-4 py-2 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-2">Icon</label>
-                        <input
-                          type="text"
-                          value={skill.icon}
-                          onChange={(e) => updateSkill(index, 'icon', e.target.value)}
-                          className="w-full px-4 py-2 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-2">Level ({skill.level}%)</label>
-                        <input
-                          type="range"
-                          min="0"
-                          max="100"
-                          value={skill.level}
-                          onChange={(e) => updateSkill(index, 'level', Number(e.target.value))}
-                          className="w-full"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-2">Color</label>
-                        <input
-                          type="color"
-                          value={skill.color}
-                          onChange={(e) => updateSkill(index, 'color', e.target.value)}
-                          className="w-full h-10 rounded-lg cursor-pointer"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             )}
 
