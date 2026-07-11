@@ -2,6 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
 import { supabase } from '../lib/supabase';
+import { getIcon } from '../lib/iconMapper';
+
+const availableIcons = [
+  'FiGithub', 'FiLinkedin', 'FiMail', 'FiYoutube', 'FiInstagram',
+  'FiTwitter', 'FiGlobe', 'FiLink', 'FaTelegram', 'FaWhatsapp',
+  'FaFacebook', 'FaTiktok', 'FaDiscord', 'FaTwitch'
+];
 
 const Admin = () => {
   const { portfolioData, fetchPortfolioData } = usePortfolio();
@@ -133,7 +140,7 @@ const Admin = () => {
       ...prev,
       contact: {
         ...prev.contact,
-        socialLinks: [...(prev.contact?.socialLinks || []), { name: '', url: '', icon: '🔗' }]
+        socialLinks: [...(prev.contact?.socialLinks || []), { name: '', url: '', icon: 'FiLink', color: '#6366f1' }]
       }
     }));
   };
@@ -248,6 +255,25 @@ const Admin = () => {
                       onChange={(e) => handleChange('hero.name', e.target.value)}
                       className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:border-gray-600"
                     />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Profile Image URL</label>
+                    <input
+                      type="text"
+                      value={formData.hero?.profileImage || ''}
+                      onChange={(e) => handleChange('hero.profileImage', e.target.value)}
+                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:border-gray-600"
+                      placeholder="https://example.com/profile.png"
+                    />
+                    {formData.hero?.profileImage && (
+                      <div className="mt-2">
+                        <img
+                          src={formData.hero.profileImage}
+                          alt="Profile preview"
+                          className="w-24 h-24 rounded-full object-cover border-2 border-purple-500/30"
+                        />
+                      </div>
+                    )}
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-2">Titles (comma separated)</label>
@@ -397,15 +423,13 @@ const Admin = () => {
                         </div>
                         <div>
                           <label className="block text-sm font-medium mb-2">Category</label>
-                          <select
+                          <input
+                            type="text"
                             value={project.category}
                             onChange={(e) => updateProject(index, 'category', e.target.value)}
                             className="w-full px-4 py-2 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
-                          >
-                            <option value="fullstack">Full Stack</option>
-                            <option value="frontend">Frontend</option>
-                            <option value="backend">Backend</option>
-                          </select>
+                            placeholder="e.g., Full Stack, Frontend, Backend, etc."
+                          />
                         </div>
                       </div>
                       <div className="mt-4">
@@ -592,49 +616,72 @@ const Admin = () => {
                   </button>
                 </div>
                 <div className="space-y-4">
-                  {(formData.contact?.socialLinks || []).map((link, index) => (
-                    <div key={index} className="p-6 bg-gray-50 dark:bg-gray-700 rounded-xl border">
-                      <div className="flex justify-between items-start mb-4">
-                        <h3 className="font-semibold text-lg text-gray-900 dark:text-white">Social Link {index + 1}</h3>
-                        <button
-                          type="button"
-                          onClick={() => removeSocialLink(index)}
-                          className="text-red-500 hover:text-red-700 text-2xl"
-                        >
-                          ×
-                        </button>
+                  {(formData.contact?.socialLinks || []).map((link, index) => {
+                    const IconComponent = getIcon(link.icon);
+                    return (
+                      <div key={index} className="p-6 bg-gray-50 dark:bg-gray-700 rounded-xl border">
+                        <div className="flex justify-between items-start mb-4">
+                          <div className="flex items-center gap-2">
+                            {IconComponent && <IconComponent className="text-2xl" style={{ color: link.color || '#6366f1' }} />}
+                            <h3 className="font-semibold text-lg text-gray-900 dark:text-white">Social Link {index + 1}</h3>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => removeSocialLink(index)}
+                            className="text-red-500 hover:text-red-700 text-2xl"
+                          >
+                            ×
+                          </button>
+                        </div>
+                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium mb-2">Name</label>
+                            <input
+                              type="text"
+                              value={link.name}
+                              onChange={(e) => updateSocialLink(index, 'name', e.target.value)}
+                              className="w-full px-4 py-2 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium mb-2">URL</label>
+                            <input
+                              type="text"
+                              value={link.url}
+                              onChange={(e) => updateSocialLink(index, 'url', e.target.value)}
+                              className="w-full px-4 py-2 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium mb-2">Icon</label>
+                            <select
+                              value={link.icon}
+                              onChange={(e) => updateSocialLink(index, 'icon', e.target.value)}
+                              className="w-full px-4 py-2 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
+                            >
+                              {availableIcons.map(iconName => {
+                                const IconOption = getIcon(iconName);
+                                return (
+                                  <option key={iconName} value={iconName}>
+                                    {iconName}
+                                  </option>
+                                );
+                              })}
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium mb-2">Color</label>
+                            <input
+                              type="color"
+                              value={link.color || '#6366f1'}
+                              onChange={(e) => updateSocialLink(index, 'color', e.target.value)}
+                              className="w-full h-10 rounded-lg cursor-pointer"
+                            />
+                          </div>
+                        </div>
                       </div>
-                      <div className="grid md:grid-cols-3 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium mb-2">Name</label>
-                          <input
-                            type="text"
-                            value={link.name}
-                            onChange={(e) => updateSocialLink(index, 'name', e.target.value)}
-                            className="w-full px-4 py-2 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium mb-2">URL</label>
-                          <input
-                            type="text"
-                            value={link.url}
-                            onChange={(e) => updateSocialLink(index, 'url', e.target.value)}
-                            className="w-full px-4 py-2 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium mb-2">Icon</label>
-                          <input
-                            type="text"
-                            value={link.icon}
-                            onChange={(e) => updateSocialLink(index, 'icon', e.target.value)}
-                            className="w-full px-4 py-2 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             )}
