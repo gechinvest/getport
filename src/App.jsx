@@ -18,21 +18,30 @@ import Admin from './pages/Admin';
 function AppContent() {
   const { loading: portfolioLoading } = usePortfolio();
   return (
-    <>
-      <Navbar />
+    <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
+        {/* Admin Route - No Navbar/Footer */}
         <Route path="/admin" element={<Admin />} />
-        <Route path="/socials" element={<Socials />} />
-        <Route path='/skills' element={<Skills />} />
-        <Route path='/about' element={<About />} />
-        <Route path='/projects' element={<Projects />} />
-        <Route path='/experience' element={<Experience />} />
-        <Route path='/contact' element={<Contact />} />
-        <Route path="*" element={<NotFound />} />
+        
+        {/* All Other Routes - With Navbar/Footer */}
+        <Route path="*" element={
+          <>
+            <Navbar />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/socials" element={<Socials />} />
+              <Route path='/skills' element={<Skills />} />
+              <Route path='/about' element={<About />} />
+              <Route path='/projects' element={<Projects />} />
+              <Route path='/experience' element={<Experience />} />
+              <Route path='/contact' element={<Contact />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <Footer />
+          </>
+        } />
       </Routes>
-      <Footer />
-    </>
+    </BrowserRouter>
   );
 }
 
@@ -40,9 +49,7 @@ function App() {
   return (
     <ThemeProvider>
       <PortfolioProvider>
-        <BrowserRouter>
-          <AppContent />
-        </BrowserRouter>
+        <AppContent />
       </PortfolioProvider>
     </ThemeProvider>
   );
