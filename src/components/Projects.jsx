@@ -46,11 +46,12 @@ const Projects = () => {
 
   const projects = portfolioData?.projects || defaultProjects;
 
+  // Get unique categories from projects
+  const uniqueCategories = Array.from(new Set(projects.map(project => project.category).filter(Boolean)));
+  
   const filters = [
     { key: 'all', label: 'All Projects' },
-    { key: 'fullstack', label: 'Fullstack' },
-    { key: 'frontend', label: 'Frontend' },
-    { key: 'backend', label: 'Backend' }
+    ...uniqueCategories.map(category => ({ key: category, label: category }))
   ];
 
   const filteredProjects = activeFilter === 'all' 
