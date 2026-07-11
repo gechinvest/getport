@@ -18,11 +18,20 @@ const Admin = () => {
   const [formData, setFormData] = useState(null);
   const [message, setMessage] = useState('');
   const [activeTab, setActiveTab] = useState('hero');
+  const [buckets, setBuckets] = useState([]);
 
   useEffect(() => {
     if (portfolioData) {
       setFormData(portfolioData);
     }
+    // Test: List all buckets to debug
+    const listBuckets = async () => {
+      const { data, error } = await supabase.storage.listBuckets();
+      console.log('Available buckets:', data);
+      if (error) console.error('Error listing buckets:', error);
+      setBuckets(data || []);
+    };
+    listBuckets();
   }, [portfolioData]);
 
   const handleLogin = (e) => {
@@ -92,25 +101,45 @@ const Admin = () => {
       setLoading(true);
       setMessage('Uploading image...');
       
+      console.log('Supabase URL:', import.meta.env.VITE_SUPABASE_URL);
+      console.log('Uploading file:', file);
+      
       const fileExt = file.name.split('.').pop();
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-      const filePath = `public/${fileName}`;
+      const filePath = fileName;
 
+      console.log('File path:', filePath);
+      console.log('Available buckets:', buckets);
+      
+      // Find first public bucket, or use any bucket
+      const targetBucket = buckets.find(b => b.public) || buckets[0];
+      
+      if (!targetBucket) {
+        throw new Error('No storage buckets found. Please create a public bucket in Supabase.');
+      }
+      
+      console.log('Using bucket:', targetBucket.name);
+      
       // Upload image to Supabase Storage
-      const { error: uploadError } = await supabase
+      const { data: uploadData, error: uploadError } = await supabase
         .storage
-        .from('portfolio-images')
+        .from(targetBucket.name)
         .upload(filePath, file);
+
+      console.log('Upload data:', uploadData);
+      console.log('Upload error:', uploadError);
 
       if (uploadError) throw uploadError;
 
       // Get public URL
-      const { data: { publicUrl } } = supabase
+      const { data } = supabase
         .storage
-        .from('portfolio-images')
+        .from(targetBucket.name)
         .getPublicUrl(filePath);
 
-      handleChange(path, publicUrl);
+      console.log('Public URL data:', data);
+
+      handleChange(path, data.publicUrl);
       setMessage('Image uploaded successfully!');
     } catch (error) {
       console.error('Error uploading image:', error);
@@ -263,6 +292,25 @@ const Admin = () => {
             </button>
           </div>
         </div>
+
+        {/* Debug: Show available buckets */}
+        {buckets.length > 0 && (
+          <div className="mb-8 p-4 bg-yellow-100 dark:bg-yellow-900 rounded-lg">
+            <h3 className="font-bold mb-2">Available Storage Buckets:</h3>
+            <ul className="list-disc list-inside">
+              {buckets.map((bucket, i) => (
+                <li key={i} className={bucket.name === 'portfolio-images' ? 'text-green-600 dark:text-green-400 font-bold' : ''}>
+                  {bucket.name} {bucket.public ? '(Public)' : '(Private)'}
+                </li>
+              ))}
+            </ul>
+            {!buckets.find(b => b.name === 'portfolio-images') && (
+              <p className="mt-2 text-red-600 dark:text-red-400 font-bold">
+                ❌ Missing bucket 'portfolio-images' - please create it in Supabase!
+              </p>
+            )}
+          </div>
+        )}
 
         {/* Tabs */}
         <div className="flex gap-4 mb-8 overflow-x-auto pb-2 flex-wrap">
