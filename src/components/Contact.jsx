@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import axios from 'axios';
 import { usePortfolio } from '../context/PortfolioContext';
+import { getIcon } from '../lib/iconMapper';
 
 const Contact = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.3 });
@@ -22,10 +23,10 @@ const Contact = () => {
     phone: '+123 456 7890',
     location: 'Addis Ababa, Ethiopia',
     socialLinks: [
-      { name: 'GitHub', url: '', icon: '💻' },
-      { name: 'LinkedIn', url: '', icon: '💼' },
-      { name: 'Twitter', url: '', icon: '🐦' },
-      { name: 'Dribbble', url: '', icon: '🎨' }
+      { name: 'GitHub', url: '', icon: 'FiGithub', color: '#333' },
+      { name: 'LinkedIn', url: '', icon: 'FiLinkedin', color: '#0A66C2' },
+      { name: 'Twitter', url: '', icon: 'FiTwitter', color: '#1DA1F2' },
+      { name: 'Instagram', url: '', icon: 'FiInstagram', color: '#E4405F' }
     ]
   };
 
@@ -158,21 +159,24 @@ const Contact = () => {
                   Follow Me
                 </h4>
                 <div className="flex gap-4">
-                  {socialLinks.map((social, index) => (
-                    <motion.a
-                      key={social.name}
-                      href={social.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      initial={{ opacity: 0, scale: 0 }}
-                      animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0 }}
-                      transition={{ delay: 0.6 + index * 0.1 }}
-                      className="w-12 h-12 flex items-center justify-center glass rounded-xl hover:bg-purple-500 hover:text-white transition-all duration-300 text-lg"
-                      aria-label={social.name}
-                    >
-                      {social.icon}
-                    </motion.a>
-                  ))}
+                  {socialLinks.map((social, index) => {
+                    const IconComponent = getIcon(social.icon);
+                    return (
+                      <motion.a
+                        key={social.name}
+                        href={social.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0 }}
+                        transition={{ delay: 0.6 + index * 0.1 }}
+                        className="w-12 h-12 flex items-center justify-center glass rounded-xl hover:bg-purple-500 hover:text-white transition-all duration-300 text-lg"
+                        aria-label={social.name}
+                      >
+                        <IconComponent style={{ color: social.color || '#6366f1' }} />
+                      </motion.a>
+                    );
+                  })}
                 </div>
               </div>
             </motion.div>
