@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-three/drei": "^9.122.0",
     "@react-three/fiber": "^8.18.0",
+    "@supabase/supabase-js": "^2.110.2",
     "axios": "^1.6.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
