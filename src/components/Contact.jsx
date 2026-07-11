@@ -1,7 +1,9 @@
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer'; // use this instead of framer's useInView for simplicity
+import { useInView } from 'react-intersection-observer';
 import axios from 'axios';
+import { usePortfolio } from '../context/PortfolioContext';
 
 const Contact = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.3 });
@@ -13,6 +15,44 @@ const Contact = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
+  const { portfolioData, loading } = usePortfolio();
+
+  const defaultContact = {
+    email: 'geta.tenaw@example.com',
+    phone: '+123 456 7890',
+    location: 'Addis Ababa, Ethiopia',
+    socialLinks: [
+      { name: 'GitHub', url: '', icon: '💻' },
+      { name: 'LinkedIn', url: '', icon: '💼' },
+      { name: 'Twitter', url: '', icon: '🐦' },
+      { name: 'Dribbble', url: '', icon: '🎨' }
+    ]
+  };
+
+  const contactData = portfolioData?.contact || defaultContact;
+
+  const contactMethods = [
+    {
+      icon: '📧',
+      title: 'Email',
+      value: contactData.email,
+      link: `mailto:${contactData.email}`
+    },
+    {
+      icon: '📱',
+      title: 'Phone',
+      value: contactData.phone,
+      link: `tel:${contactData.phone.replace(/\s/g, '')}`
+    },
+    {
+      icon: '📍',
+      title: 'Location',
+      value: contactData.location,
+      link: '#'
+    }
+  ];
+
+  const socialLinks = contactData.socialLinks || defaultContact.socialLinks;
 
   const handleChange = (e) => {
     setFormData({
@@ -41,33 +81,15 @@ const Contact = () => {
     }
   };
 
-  const contactMethods = [
-    {
-      icon: '📧',
-      title: 'Email',
-      value: 'amex44755@gmail.com',
-      link: 'mailto:amex44755@gmail.com'
-    },
-    {
-      icon: '📱',
-      title: 'Phone',
-      value: '+251 985 139 776',
-      link: 'tel:+251985139776'
-    },
-    {
-      icon: '📍',
-      title: 'Location',
-      value: 'Injibara, ETHIOPIA',
-      link: '#'
-    }
-  ];
-
-  const socialLinks = [
-    { name: 'GitHub', url: '#', icon: '💻' },
-    { name: 'LinkedIn', url: '#', icon: '💼' },
-    { name: 'Twitter', url: '#', icon: '🐦' },
-    { name: 'Dribbble', url: '#', icon: '🎨' }
-  ];
+  if (loading) {
+    return (
+      <section id="contact" ref={ref} className="py-20 bg-white/80 dark:bg-dark-300/80 backdrop-blur-sm">
+        <div className="container mx-auto px-6 text-center">
+          <p className="text-xl text-gray-600 dark:text-gray-300">Loading...</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="contact" ref={ref} className="py-20 bg-white/80 dark:bg-dark-300/80 backdrop-blur-sm">
@@ -122,7 +144,7 @@ const Contact = () => {
                       <div className="font-semibold text-gray-900 dark:text-white">
                         {method.title}
                       </div>
-                      <div className="text-gray-600 dark:text-gray-400 group-hover:text-primary-500 transition-colors duration-300">
+                      <div className="text-gray-600 dark:text-gray-400 group-hover:text-purple-500 transition-colors duration-300">
                         {method.value}
                       </div>
                     </div>
@@ -145,7 +167,7 @@ const Contact = () => {
                       initial={{ opacity: 0, scale: 0 }}
                       animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0 }}
                       transition={{ delay: 0.6 + index * 0.1 }}
-                      className="w-12 h-12 flex items-center justify-center glass rounded-xl hover:bg-primary-500 hover:text-white transition-all duration-300 text-lg"
+                      className="w-12 h-12 flex items-center justify-center glass rounded-xl hover:bg-purple-500 hover:text-white transition-all duration-300 text-lg"
                       aria-label={social.name}
                     >
                       {social.icon}
@@ -174,7 +196,7 @@ const Contact = () => {
                       required
                       value={formData.name}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white/70 dark:bg-dark-200/70 backdrop-blur-sm text-gray-900 dark:text-white transition-all duration-300"
+                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white/70 dark:bg-dark-200/70 backdrop-blur-sm text-gray-900 dark:text-white transition-all duration-300"
                       placeholder="John Doe"
                     />
                   </div>
@@ -189,7 +211,7 @@ const Contact = () => {
                       required
                       value={formData.email}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white/70 dark:bg-dark-200/70 backdrop-blur-sm text-gray-900 dark:text-white transition-all duration-300"
+                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white/70 dark:bg-dark-200/70 backdrop-blur-sm text-gray-900 dark:text-white transition-all duration-300"
                       placeholder="john@example.com"
                     />
                   </div>
@@ -205,7 +227,7 @@ const Contact = () => {
                     required
                     value={formData.subject}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white/70 dark:bg-dark-200/70 backdrop-blur-sm text-gray-900 dark:text-white transition-all duration-300"
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white/70 dark:bg-dark-200/70 backdrop-blur-sm text-gray-900 dark:text-white transition-all duration-300"
                     placeholder="Project Collaboration"
                   />
                 </div>
@@ -220,7 +242,7 @@ const Contact = () => {
                     required
                     value={formData.message}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white/70 dark:bg-dark-200/70 backdrop-blur-sm text-gray-900 dark:text-white transition-all duration-300 resize-vertical"
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white/70 dark:bg-dark-200/70 backdrop-blur-sm text-gray-900 dark:text-white transition-all duration-300 resize-vertical"
                     placeholder="Tell me about your project..."
                   ></textarea>
                 </div>
