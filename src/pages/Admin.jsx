@@ -158,7 +158,7 @@ const Admin = () => {
 
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 relative z-50">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 fixed inset-0 z-[100] overflow-y-auto">
         <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-md">
           <h2 className="text-3xl font-bold text-center mb-6 gradient-text">Admin Login</h2>
           <form onSubmit={handleLogin} className="space-y-4">
@@ -187,7 +187,7 @@ const Admin = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 relative z-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 fixed inset-0 z-[100] overflow-y-auto">
       <div className="container mx-auto px-6">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold gradient-text">Admin Dashboard</h1>
