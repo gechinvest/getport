@@ -99,7 +99,7 @@ on conflict (id) do nothing;
 -- 5. Enable Row Level Security (RLS)
 alter table portfolio enable row level security;
 
--- 6. Create RLS policies
+-- 6. Create RLS policies for portfolio table
 create policy "Enable read access for all users"
   on portfolio for select
   using (true);
@@ -120,27 +120,15 @@ insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_typ
 values ('portfolio-images', 'portfolio-images', true, 52428800, ARRAY['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
 on conflict (id) do update set public = true;
 
--- 8. Storage RLS policies
+-- 8. Storage RLS policies for buckets (allow listing)
+create policy "Public can list buckets"
+  on storage.buckets for select
+  using (true);
+
+-- 9. Storage RLS policies for objects
 create policy "Public Access"
   on storage.objects for select
   using (bucket_id = 'portfolio-images');
-
-create policy "Authenticated Upload"
-  on storage.objects for insert
-  with check (bucket_id = 'portfolio-images');
-
-create policy "Authenticated Update"
-  on storage.objects for update
-  using (bucket_id = 'portfolio-images');
-
-create policy "Authenticated Delete"
-  on storage.objects for delete
-  using (bucket_id = 'portfolio-images');
-
--- Note: For simplicity, let's also allow public uploads for now (remove later if needed)
-drop policy if exists "Authenticated Upload" on storage.objects;
-drop policy if exists "Authenticated Update" on storage.objects;
-drop policy if exists "Authenticated Delete" on storage.objects;
 
 create policy "Public can upload"
   on storage.objects for insert
