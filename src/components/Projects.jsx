@@ -140,12 +140,9 @@ const Projects = () => {
 
                   {/* Project Content */}
                   <div className="p-6">
-                    <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">
+                    <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
                       {project.title}
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
-                      {project.description}
-                    </p>
 
                     {/* Tags */}
                     <div className="flex flex-wrap gap-2 mb-4">

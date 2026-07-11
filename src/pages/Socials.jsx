@@ -45,7 +45,6 @@ const Socials = () => {
                   className="text-5xl mb-3 transition-transform group-hover:scale-110"
                   style={{ color: social.color || '#6366f1' }}
                 />
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{social.name}</span>
               </motion.a>
             );
           })}
