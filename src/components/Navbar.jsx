@@ -90,11 +90,11 @@ const Navbar = () => {
             duration={500}
             className="text-2xl font-bold cursor-pointer"
           >
-            <span className="gradient-text">Amare</span>
+            <span className="gradient-text">Geta</span>
           </ScrollLink>
         ) : (
           <RouterLink to="/" className="text-2xl font-bold cursor-pointer">
-            <span className="gradient-text">Amare</span>
+            <span className="gradient-text">Geta</span>
           </RouterLink>
         )}
 

@@ -133,7 +133,7 @@ const Admin = () => {
       ...prev,
       contact: {
         ...prev.contact,
-        socialLinks: [...(prev.contact?.socialLinks || []), { name: '', url: '', icon: '🔗' }
+        socialLinks: [...(prev.contact?.socialLinks || []), { name: '', url: '', icon: 'FiLink', color: '#6366f1' }]
       }
     }));
   };
@@ -158,7 +158,7 @@ const Admin = () => {
 
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 relative z-50">
         <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-md">
           <h2 className="text-3xl font-bold text-center mb-6 gradient-text">Admin Login</h2>
           <form onSubmit={handleLogin} className="space-y-4">
@@ -187,7 +187,7 @@ const Admin = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 relative z-50">
       <div className="container mx-auto px-6">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold gradient-text">Admin Dashboard</h1>
@@ -603,7 +603,7 @@ const Admin = () => {
                           ×
                         </button>
                       </div>
-                      <div className="grid md:grid-cols-3 gap-4">
+                      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div>
                           <label className="block text-sm font-medium mb-2">Name</label>
                           <input
@@ -623,12 +623,21 @@ const Admin = () => {
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium mb-2">Icon</label>
+                          <label className="block text-sm font-medium mb-2">Icon (e.g., FiGithub, FaTelegram)</label>
                           <input
                             type="text"
                             value={link.icon}
                             onChange={(e) => updateSocialLink(index, 'icon', e.target.value)}
                             className="w-full px-4 py-2 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium mb-2">Color</label>
+                          <input
+                            type="color"
+                            value={link.color || '#6366f1'}
+                            onChange={(e) => updateSocialLink(index, 'color', e.target.value)}
+                            className="w-full h-10 rounded-lg cursor-pointer"
                           />
                         </div>
                       </div>
