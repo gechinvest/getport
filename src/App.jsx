@@ -13,6 +13,7 @@ import Experience from './components/Experience';
 import Socials from './pages/Socials';
 import NotFound from './pages/NotFound';
 import About from './components/About';
+import Admin from './pages/Admin';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -32,6 +33,7 @@ function App() {
               <Navbar />
               <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path="/admin" element={<Admin />} />
                 <Route path="/socials" element={<Socials />} />
                 <Route path='/skills' element={<Skills />} />
                 <Route path='/about' element={<About />} />

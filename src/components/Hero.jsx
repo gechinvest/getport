@@ -28,7 +28,7 @@ const Hero = () => {
 
           <motion.p className="text-lg text-gray-600 dark:text-gray-300 mb-4">Hello, I'm</motion.p>
           <motion.h1 className="text-5xl md:text-7xl font-bold mb-4">
-            <span className="gradient-text">Amare</span>
+            <span className="gradient-text">Geta Tenaw</span>
           </motion.h1>
           <motion.div className="text-2xl md:text-4xl font-semibold text-gray-800 dark:text-white mb-6 h-12">
             <span>{text}</span>
