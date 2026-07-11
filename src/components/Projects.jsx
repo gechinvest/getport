@@ -5,6 +5,7 @@ import VideoEditor from '../assets/Video-editor.png';
 import Inuproject from '../assets/inu.png';
 import Hotel from '../assets/hotel-booking.png';
 import { usePortfolio } from '../context/PortfolioContext';
+import { FiGlobe, FiGithub } from 'react-icons/fi';
 
 const Projects = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
@@ -164,9 +165,10 @@ const Projects = () => {
                           href={project.liveUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex-1 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white text-center py-2 rounded-lg transition-all duration-300"
+                          className="flex-1 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white text-center py-2 rounded-lg transition-all duration-300 flex items-center justify-center"
+                          aria-label="Live Demo"
                         >
-                          Live Demo
+                          <FiGlobe className="text-lg" />
                         </a>
                       )}
                       {project.githubUrl && (
@@ -174,9 +176,10 @@ const Projects = () => {
                           href={project.githubUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex-1 glass text-gray-700 dark:text-gray-300 text-center py-2 rounded-lg hover:bg-white/50 dark:hover:bg-dark-200/50 transition-all duration-300"
+                          className="flex-1 glass text-gray-700 dark:text-gray-300 text-center py-2 rounded-lg hover:bg-white/50 dark:hover:bg-dark-200/50 transition-all duration-300 flex items-center justify-center"
+                          aria-label="GitHub"
                         >
-                          GitHub
+                          <FiGithub className="text-lg" />
                         </a>
                       )}
                     </div>
