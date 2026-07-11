@@ -26,10 +26,17 @@ begin
 end;
 $$;
 
-create trigger if not exists handle_portfolio_updated_at
-    before update on portfolio
-    for each row
-    execute function handle_updated_at();
+-- Check if trigger exists before creating
+do $$
+begin
+  if not exists (select 1 from pg_trigger where tgname = 'handle_portfolio_updated_at') then
+    create trigger handle_portfolio_updated_at
+        before update on portfolio
+        for each row
+        execute function handle_updated_at();
+  end if;
+end
+$$;
 
 -- 4. Insert initial data if not exists
 insert into portfolio (id, data)
