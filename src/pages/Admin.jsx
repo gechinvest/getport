@@ -181,7 +181,8 @@ const Admin = () => {
             { id: 'skills', label: 'Skills' },
             { id: 'projects', label: 'Projects' },
             { id: 'experience', label: 'Experience' },
-            { id: 'contact', label: 'Contact' }
+            { id: 'contact', label: 'Contact' },
+            { id: 'settings', label: 'Settings' }
           ].map(tab => (
             <button
               key={tab.id}
@@ -582,6 +583,27 @@ const Admin = () => {
                     onChange={(e) => handleChange('contact.location', e.target.value)}
                     className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:border-gray-600"
                   />
+                </div>
+              </div>
+            )}
+
+            {/* Settings Section */}
+            {activeTab === 'settings' && (
+              <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg">
+                <h2 className="text-2xl font-semibold mb-6">Admin Settings</h2>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Change Admin Password</label>
+                    <input
+                      type="password"
+                      placeholder="Enter new password"
+                      onChange={(e) => handleChange('admin.password', e.target.value)}
+                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:border-gray-600"
+                    />
+                  </div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    Current password is stored in your portfolio data. Save changes to update it.
+                  </p>
                 </div>
               </div>
             )}
